@@ -1,5 +1,11 @@
 # 电影数据理解
 
+所有格式都是CSV格式，如果不懂这种数据格式请自行搜索，可以把csv当作关系型数据库表。
+
+以下是我个人对电影数据的文档简单整理。
+
+目前的麻烦的地方在于，都是英文的电影数据，而我们电影推荐应该是各种中文信息，这点有点麻烦。
+
 ## ratings.csv
 
 `用户`某个时间对`某电影`的`评分`，格式如下：
@@ -40,6 +46,8 @@ userId,movieId,tag,timestamp
 23,150,Ron Howard,1148672905
 ```
 
+`标签`的种类很多，而且是英文的，目前不清楚怎么整合，豆瓣电影里面的标签应该是中文的吧？
+
 ## movies.csv
 
 包含电影的`标题`和`类型`信息，格式如下：
@@ -62,7 +70,7 @@ movieId,title,genres
 14,Nixon (1995),Drama
 ```
 
-`Genres` are a pipe-separated list, and are selected from the following:
+`Genres` 是用竖线分割的列表，均是以下值:
 
 - Action
 - Adventure
