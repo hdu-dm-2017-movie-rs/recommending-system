@@ -216,113 +216,211 @@ code.language-yaml {
     </head>
     <body for="html-export">
       <div class="mume markdown-preview   ">
-      <h2 class="mume-header" id="notes-for-recommender-system">Notes for Recommender System</h2>
+      <h2 class="mume-header" id="notes-for-recommending-system">Notes for Recommending System</h2>
 
-<h3 class="mume-header" id="%E4%B8%80-%E5%AE%9E%E9%AA%8C%E6%96%B9%E6%B3%95">一、实验方法</h3>
+<h3 class="mume-header" id="%E5%AE%9E%E9%AA%8C%E6%96%B9%E6%B3%95">实验方法</h3>
 
-<p>1.离线实验：用于测试大量的算法并选取合适的<br>
-2.在线实验：上线测试<br>
-3.用户调查：</p>
-<h3 class="mume-header" id="%E4%BA%8C-%E6%95%B0%E6%8D%AE%E9%9B%86">二、数据集</h3>
-
-<p>1.MovieLens<br>
-2.豆瓣</p>
-<h3 class="mume-header" id="%E4%B8%89-%E8%AF%84%E6%B5%8B%E6%8C%87%E6%A0%87">三、评测指标</h3>
-
-<p>1.TopN推荐预测度量：准确率(precision)&amp;召回率(recall)，然后画出准确率/召回率曲线</p>
 <ul>
-<li>设<span class="mathjax-exps">$R(u)$</span>为训练集的推荐列表，<span class="mathjax-exps">$T(u)$</span>为测试集上的列表<br>
-<span class="mathjax-exps">$Recall = &#x5C;frac{&#x5C;sum|R(u)&#x5C;cap T(u)|}{&#x5C;sum|T(u)|}$</span><br>
-<span class="mathjax-exps">$Precision = &#x5C;frac{&#x5C;sum|R(u)&#x5C;cap T(u)|}{&#x5C;sum|R(u)|}$</span></li>
+<li>1.离线实验：用于测试大量的算法并选取合适的</li>
+<li>2.在线实验：上线测试</li>
+<li>3.用户调查：</li>
 </ul>
+<h3 class="mume-header" id="%E6%95%B0%E6%8D%AE%E9%9B%86">数据集</h3>
+
+<ul>
+<li>*1.<a href="http://www.grouplens.org/node/73">MovieLens</a><br>
+*2.豆瓣<br>
+3.Netflix<br>
+4.IMDb</li>
+</ul>
+<h3 class="mume-header" id="%E8%AF%84%E6%B5%8B%E6%8C%87%E6%A0%87">评测指标</h3>
+
+<ul>
+<li>1.TopN推荐预测度量：准确率(precision)&amp;召回率(recall)，然后画出准确率/召回率曲线
+<ul>
+<li>
+<p>设<span class="mathjax-exps">$R(u)$</span>为训练集的推荐列表，<span class="mathjax-exps">$T(u)$</span>为测试集上的列表<br>
+<span class="mathjax-exps">$Recall = &#x5C;frac{&#x5C;sum|R(u)&#x5C;cap T(u)|}{&#x5C;sum|T(u)|}$</span><br>
+<span class="mathjax-exps">$Precision = &#x5C;frac{&#x5C;sum|R(u)&#x5C;cap T(u)|}{&#x5C;sum|R(u)|}$</span></p>
 <pre class="language-python"><span class="token keyword">def</span> <span class="token function">PrecisionRecall</span><span class="token punctuation">(</span>test<span class="token punctuation">,</span> N<span class="token punctuation">)</span><span class="token punctuation">:</span>
-    hit <span class="token operator">=</span> <span class="token number">0</span>
-    n_recall <span class="token operator">=</span> <span class="token number">0</span>
-    n_precision <span class="token operator">=</span> <span class="token number">0</span>
-    <span class="token keyword">for</span> user<span class="token punctuation">,</span> items <span class="token keyword">in</span> test<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-        rank <span class="token operator">=</span> Recommend<span class="token punctuation">(</span>user<span class="token punctuation">,</span> N<span class="token punctuation">)</span>
-        hit <span class="token operator">+=</span> len<span class="token punctuation">(</span>rank <span class="token operator">&amp;</span> items<span class="token punctuation">)</span>
-        n_recall <span class="token operator">+=</span> len<span class="token punctuation">(</span>items<span class="token punctuation">)</span>
-        n_precision <span class="token operator">+=</span> N
+	hit <span class="token operator">=</span> <span class="token number">0</span>
+	n_recall <span class="token operator">=</span> <span class="token number">0</span>
+	n_precision <span class="token operator">=</span> <span class="token number">0</span>
+	<span class="token keyword">for</span> user<span class="token punctuation">,</span> items <span class="token keyword">in</span> test<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+		rank <span class="token operator">=</span> Recommend<span class="token punctuation">(</span>user<span class="token punctuation">,</span> N<span class="token punctuation">)</span>
+		hit <span class="token operator">+=</span> len<span class="token punctuation">(</span>rank <span class="token operator">&amp;</span> items<span class="token punctuation">)</span>
+		n_recall <span class="token operator">+=</span> len<span class="token punctuation">(</span>items<span class="token punctuation">)</span>
+		n_precision <span class="token operator">+=</span> N
 <span class="token keyword">return</span> <span class="token punctuation">[</span>hit <span class="token operator">/</span> <span class="token punctuation">(</span><span class="token number">1.0</span> <span class="token operator">*</span> n_recall<span class="token punctuation">)</span><span class="token punctuation">,</span> hit <span class="token operator">/</span> <span class="token punctuation">(</span><span class="token number">1.0</span> <span class="token operator">*</span> n_precision<span class="token punctuation">)</span><span class="token punctuation">]</span>
 </pre>
-<p>2.覆盖率：推荐系统能够推荐出来的物品占总物品集合的比例，是描述一个推荐系统对物品长尾的发掘能力</p>
+<pre class="language-python">增加train集
+<span class="token keyword">def</span> <span class="token function">Recall</span><span class="token punctuation">(</span>train<span class="token punctuation">,</span> test<span class="token punctuation">,</span> N<span class="token punctuation">)</span><span class="token punctuation">:</span>
+	hit <span class="token operator">=</span> <span class="token number">0</span>
+	all <span class="token operator">=</span> <span class="token number">0</span>
+	<span class="token keyword">for</span> user <span class="token keyword">in</span> train<span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+		tu <span class="token operator">=</span> test<span class="token punctuation">[</span>user<span class="token punctuation">]</span>
+		rank <span class="token operator">=</span> GetRecommendation<span class="token punctuation">(</span>user<span class="token punctuation">,</span> N<span class="token punctuation">)</span>
+		<span class="token keyword">for</span> item<span class="token punctuation">,</span> pui <span class="token keyword">in</span> rank<span class="token punctuation">:</span>
+			<span class="token keyword">if</span> item <span class="token keyword">in</span> tu<span class="token punctuation">:</span>
+				hit <span class="token operator">+=</span> <span class="token number">1</span>
+		all <span class="token operator">+=</span> len<span class="token punctuation">(</span>tu<span class="token punctuation">)</span>
+	<span class="token keyword">return</span> hit <span class="token operator">/</span> <span class="token punctuation">(</span>all <span class="token operator">*</span> <span class="token number">1.0</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">Precision</span><span class="token punctuation">(</span>train<span class="token punctuation">,</span> test<span class="token punctuation">,</span> N<span class="token punctuation">)</span><span class="token punctuation">:</span>
+	hit <span class="token operator">=</span> <span class="token number">0</span>
+	all <span class="token operator">=</span> <span class="token number">0</span>
+	<span class="token keyword">for</span> user <span class="token keyword">in</span> train<span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+		tu <span class="token operator">=</span> test<span class="token punctuation">[</span>user<span class="token punctuation">]</span>
+		rank <span class="token operator">=</span> GetRecommendation<span class="token punctuation">(</span>user<span class="token punctuation">,</span> N<span class="token punctuation">)</span>
+		<span class="token keyword">for</span> item<span class="token punctuation">,</span> pui <span class="token keyword">in</span> rank<span class="token punctuation">:</span>
+			<span class="token keyword">if</span> item <span class="token keyword">in</span> tu<span class="token punctuation">:</span>
+				hit <span class="token operator">+=</span> <span class="token number">1</span>
+		all <span class="token operator">+=</span> N
+	<span class="token keyword">return</span> hit <span class="token operator">/</span> <span class="token punctuation">(</span>all <span class="token operator">*</span> <span class="token number">1.0</span><span class="token punctuation">)</span>
+</pre>
+</li>
+</ul>
+</li>
+<li>2.覆盖率(Coverage)：推荐系统能够推荐出来的物品占总物品集合的比例，是描述一个推荐系统对物品长尾的发掘能力
 <ul>
 <li>
 <p>好的推荐系统需要有比较高的用户满意度，也可以考虑较高的覆盖率</p>
-</li>
-<li>
-<p>2.1 简单覆盖率：设用户集合为U，<span class="mathjax-exps">$R(u)$</span>为训练集的推荐列表，I为总物品的集合<br>
-<span class="mathjax-exps">$Coverage = &#x5C;frac{U_{R(u)}}{I}$</span></p>
-</li>
-<li>
-<p>2.2 信息熵和基尼系数：通过研究物品在推荐列表中出现次数的分布描述推荐系统挖掘长尾的能力</p>
 <ul>
-<li>设p()计算物品流行程度，i和j为物品量<br>
+<li>2.1 简单覆盖率：设用户集合为U，<span class="mathjax-exps">$R(u)$</span>为训练集的推荐列表，I为总物品的集合<br>
+<span class="mathjax-exps">$Coverage = &#x5C;frac{U_{R(u)}}{I}$</span></li>
+<li>2.2 信息熵和基尼系数：通过研究物品在推荐列表中出现次数的分布描述推荐系统挖掘长尾的能力<br>
+- 设p()计算物品流行程度，i和j为物品量<br>
 <span class="mathjax-exps">$Entropy = -&#x5C;sum_{i=1}^nP(i)logP(i)$</span><br>
 <span class="mathjax-exps">$Gini = &#x5C;frac1{n-1}&#x5C;sum_{j=1}^n(2j-n-1)P(j)$</span> (通行算法)</li>
-</ul>
-</li>
-</ul>
-<pre class="language-python"><span class="token keyword">def</span> <span class="token function">GiniIndex</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">:</span>
-    j <span class="token operator">=</span> <span class="token number">1</span>
-    n <span class="token operator">=</span> len<span class="token punctuation">(</span>p<span class="token punctuation">)</span>
-    G <span class="token operator">=</span> <span class="token number">0</span>
-    <span class="token keyword">for</span> item<span class="token punctuation">,</span> weight <span class="token keyword">in</span> sorted<span class="token punctuation">(</span>p<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> key<span class="token operator">=</span>itemgetter<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-        G <span class="token operator">+=</span> <span class="token punctuation">(</span><span class="token number">2</span> <span class="token operator">*</span> j <span class="token operator">-</span> n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">*</span> weight
-<span class="token keyword">return</span> G <span class="token operator">/</span> float<span class="token punctuation">(</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span>
-</pre>
-<ul>
 <li>2.3 社会学马太效应：系统会增大热门物品和非热门物品的流行度差距，而推荐系统的初衷是希望消除马太效应，使得各种物品能被展示给对它们感兴趣的某一类人群
 <ul>
 <li>用Gini系数衡量马太效应，减少推荐算法中基尼系数和实际基尼系数两者之间的差距</li>
 </ul>
 </li>
 </ul>
-<p>3.多样性：使推荐列表能覆盖用户的多个兴趣点</p>
+<pre class="language-python"><span class="token keyword">def</span> <span class="token function">Coverage</span><span class="token punctuation">(</span>train<span class="token punctuation">,</span> test<span class="token punctuation">,</span> N<span class="token punctuation">)</span><span class="token punctuation">:</span>
+	recommend_items <span class="token operator">=</span> set<span class="token punctuation">(</span><span class="token punctuation">)</span>
+	all_items <span class="token operator">=</span> set<span class="token punctuation">(</span><span class="token punctuation">)</span>
+	<span class="token keyword">for</span> user <span class="token keyword">in</span> train<span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+		<span class="token keyword">for</span> item <span class="token keyword">in</span> train<span class="token punctuation">[</span>user<span class="token punctuation">]</span><span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+			all_items<span class="token punctuation">.</span>add<span class="token punctuation">(</span>item<span class="token punctuation">)</span>
+		rank <span class="token operator">=</span> GetRecommendation<span class="token punctuation">(</span>user<span class="token punctuation">,</span> N<span class="token punctuation">)</span>
+		<span class="token keyword">for</span> item<span class="token punctuation">,</span> pui <span class="token keyword">in</span> rank<span class="token punctuation">:</span>
+			recommend_items<span class="token punctuation">.</span>add<span class="token punctuation">(</span>item<span class="token punctuation">)</span>
+	<span class="token keyword">return</span> len<span class="token punctuation">(</span>recommend_items<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token punctuation">(</span>len<span class="token punctuation">(</span>all_items<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">1.0</span><span class="token punctuation">)</span>
+</pre>
+<pre class="language-python"><span class="token keyword">def</span> <span class="token function">GiniIndex</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">:</span>
+		j <span class="token operator">=</span> <span class="token number">1</span>
+		n <span class="token operator">=</span> len<span class="token punctuation">(</span>p<span class="token punctuation">)</span>
+		G <span class="token operator">=</span> <span class="token number">0</span>
+		<span class="token keyword">for</span> item<span class="token punctuation">,</span> weight <span class="token keyword">in</span> sorted<span class="token punctuation">(</span>p<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> key<span class="token operator">=</span>itemgetter<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+				G <span class="token operator">+=</span> <span class="token punctuation">(</span><span class="token number">2</span> <span class="token operator">*</span> j <span class="token operator">-</span> n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">*</span> weight
+<span class="token keyword">return</span> G <span class="token operator">/</span> float<span class="token punctuation">(</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span>
+</pre>
+</li>
+</ul>
+</li>
+<li>3.多样性：使推荐列表能覆盖用户的多个兴趣点
 <ul>
 <li>设<span class="mathjax-exps">$s(i,j)&#x5C;in [0,1]$</span>为物品i和j之间的相似度<br>
 <span class="mathjax-exps">$Diversity = 1-&#x5C;frac{&#x5C;sum s(i,j)}{0.5*|R(u)|(|R(u)|-1)}$</span><br>
 <span class="mathjax-exps">$Diversity = &#x5C;frac1{|U|&#x5C;sum_U Diversity(R(u))}$</span> (整体多样性)</li>
 </ul>
-<p>4.实时性</p>
-<h3 class="mume-header" id="%E5%85%AD-%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0">六、算法实现</h3>
+</li>
+<li>4.实时性</li>
+<li>5.新颖度</li>
+</ul>
+<h3 class="mume-header" id="%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0">算法实现</h3>
 
-<ol>
-<li><a href="http://blog.csdn.net/gamer_gyt/article/details/51346159">用户 &amp; Item 协同过滤算法</a></li>
-<li><a href="http://blog.csdn.net/gamer_gyt/article/details/51684716">基于标签的推荐系统</a></li>
-</ol>
+<ul>
+<li>1.<a href="http://blog.csdn.net/gamer_gyt/article/details/51346159">用户 &amp; Item 协同过滤算法</a></li>
+<li>2.<a href="http://blog.csdn.net/gamer_gyt/article/details/51684716">基于标签的推荐系统</a></li>
+</ul>
 <h4 class="mume-header" id="%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E7%AE%97%E6%B3%95">协同过滤算法</h4>
 
 <ul>
 <li>得到<code>用户-物品</code>，<code>物品-评分</code>格式的数据</li>
-<li>假设有用户u和v，物品i和j，采用皮尔逊相关性的计算</li>
-</ul>
+<li>假设有用户u和v，物品i和j，采用Jaccard公式或cos相似度的计算
+<ul>
+<li>
 <p>1.基于用户：评测用户之间的相似性，给用户推荐和他兴趣相投的<code>其他用户</code>喜欢的物品</p>
 <ul>
 <li>构建<strong>用户</strong>相似度矩阵w</li>
-<li>相似度计算：<span class="mathjax-exps">$W_{uv} = &#x5C;frac{|N(u)&#x5C;cap N(v)|}{&#x5C;sqrt{|N(u)||N(v)|}}$</span>
+<li><strong>相似度计算</strong>：<span class="mathjax-exps">$W_{uv} = &#x5C;frac{|N(u)&#x5C;cap N(v)|}{&#x5C;sqrt{|N(u)||N(v)|}}$</span>
 <ul>
 <li>N(u)表示用户喜欢的物品的集合</li>
 </ul>
 </li>
-<li>推荐公式：<span class="mathjax-exps">$P(u,i) = &#x5C;sum_{v&#x5C;in S(u.k)&#x5C;cap N(i)}W_{uv}R_{vi}$</span>
+<li><strong>相似度计算改进</strong>：首先计算出<span class="mathjax-exps">$|N(u)&#x5C;cap N(v)|&#x5C;neq 0$</span>的用户对<span class="mathjax-exps">$(u,v)$</span>进行初步筛选,之后用余弦相似度计算</li>
+<li><strong>推荐公式</strong>：<span class="mathjax-exps">$P(u,i) = &#x5C;sum_{v&#x5C;in S(u.k)&#x5C;cap N(i)}W_{uv}R_{vi}$</span>
 <ul>
 <li>S(u,k)表示和用户u兴趣最接近的K个用户，N(i)表示对物品i有过行为的用户集合，<span class="mathjax-exps">$W_uv$</span>表示用户u和用户v的兴趣相似度，<span class="mathjax-exps">$R_vi$</span>表示用户v对物品i的评分)</li>
 </ul>
 </li>
 </ul>
+<pre class="language-python"><span class="token comment" spellcheck="true"># 相似度计算</span>
+<span class="token keyword">def</span> <span class="token function">UserSimilarity</span><span class="token punctuation">(</span>train<span class="token punctuation">)</span><span class="token punctuation">:</span>
+	W <span class="token operator">=</span> dict<span class="token punctuation">(</span><span class="token punctuation">)</span>
+	<span class="token keyword">for</span> u <span class="token keyword">in</span> train<span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+		<span class="token keyword">for</span> v <span class="token keyword">in</span> train<span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+			<span class="token keyword">if</span> u <span class="token operator">==</span> v<span class="token punctuation">:</span>
+				<span class="token keyword">continue</span>
+			W<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">=</span> len<span class="token punctuation">(</span>train<span class="token punctuation">[</span>u<span class="token punctuation">]</span> <span class="token operator">&amp;</span> train<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">)</span>
+			W<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">/=</span> math<span class="token punctuation">.</span>sqrt<span class="token punctuation">(</span>len<span class="token punctuation">(</span>train<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">*</span> len<span class="token punctuation">(</span>train<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">1.0</span><span class="token punctuation">)</span>
+	<span class="token keyword">return</span> W
+</pre>
+<p>(然而非常耗时)</p>
+<pre class="language-python"><span class="token comment" spellcheck="true"># 相似度计算改进</span>
+<span class="token keyword">def</span> <span class="token function">UserSimilarity</span><span class="token punctuation">(</span>train<span class="token punctuation">)</span><span class="token punctuation">:</span>
+	<span class="token comment" spellcheck="true"># build inverse table for item_users(倒排表)</span>
+	item_users <span class="token operator">=</span> dict<span class="token punctuation">(</span><span class="token punctuation">)</span>
+	<span class="token keyword">for</span> u<span class="token punctuation">,</span> items <span class="token keyword">in</span> train<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+		<span class="token keyword">for</span> i <span class="token keyword">in</span> items<span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+			<span class="token keyword">if</span> i <span class="token operator">not</span> <span class="token keyword">in</span> item_users<span class="token punctuation">:</span>
+				item_users<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> set<span class="token punctuation">(</span><span class="token punctuation">)</span>
+			item_users<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>add<span class="token punctuation">(</span>u<span class="token punctuation">)</span>
+	
+	<span class="token comment" spellcheck="true">#calculate co-rated items between users</span>
+	C <span class="token operator">=</span> dict<span class="token punctuation">(</span><span class="token punctuation">)</span>
+	N <span class="token operator">=</span> dict<span class="token punctuation">(</span><span class="token punctuation">)</span>
+	<span class="token keyword">for</span> i<span class="token punctuation">,</span> users <span class="token keyword">in</span> item_users<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+		<span class="token keyword">for</span> u <span class="token keyword">in</span> users<span class="token punctuation">:</span>
+			N<span class="token punctuation">[</span>u<span class="token punctuation">]</span> <span class="token operator">+=</span> <span class="token number">1</span>
+			<span class="token keyword">for</span> v <span class="token keyword">in</span> users<span class="token punctuation">:</span>
+				<span class="token keyword">if</span> u <span class="token operator">==</span> v<span class="token punctuation">:</span>
+					<span class="token keyword">continue</span>
+				C<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">+=</span> <span class="token number">1</span>
+	
+	<span class="token comment" spellcheck="true">#calculate finial similarity matrix W</span>
+	W <span class="token operator">=</span> dict<span class="token punctuation">(</span><span class="token punctuation">)</span>
+	<span class="token keyword">for</span> u<span class="token punctuation">,</span> related_users <span class="token keyword">in</span> C<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+		<span class="token keyword">for</span> v<span class="token punctuation">,</span> cuv <span class="token keyword">in</span> related_users<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+			W<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">=</span> cuv <span class="token operator">/</span> math<span class="token punctuation">.</span>sqrt<span class="token punctuation">(</span>N<span class="token punctuation">[</span>u<span class="token punctuation">]</span> <span class="token operator">*</span> N<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">)</span>
+	<span class="token keyword">return</span> W
+</pre>
+<pre class="language-python"><span class="token comment" spellcheck="true"># 推荐</span>
+<span class="token keyword">def</span> <span class="token function">Recommend</span><span class="token punctuation">(</span>user<span class="token punctuation">,</span> train<span class="token punctuation">,</span> W<span class="token punctuation">)</span><span class="token punctuation">:</span>
+	rank <span class="token operator">=</span> dict<span class="token punctuation">(</span><span class="token punctuation">)</span>
+	interacted_items <span class="token operator">=</span> train<span class="token punctuation">[</span>user<span class="token punctuation">]</span>
+	<span class="token keyword">for</span> v<span class="token punctuation">,</span> wuv <span class="token keyword">in</span> sorted<span class="token punctuation">(</span>W<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">.</span>items<span class="token punctuation">,</span> key<span class="token operator">=</span>itemgetter<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> \
+		reverse<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span>K<span class="token punctuation">]</span><span class="token punctuation">:</span>
+	<span class="token keyword">for</span> i<span class="token punctuation">,</span> rvi <span class="token keyword">in</span> train<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">.</span>items<span class="token punctuation">:</span>
+		<span class="token keyword">if</span> i <span class="token keyword">in</span> interacted_items<span class="token punctuation">:</span>
+			<span class="token comment" spellcheck="true">#we should filter items user interacted before</span>
+			<span class="token keyword">continue</span>
+		rank<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">+=</span> wuv <span class="token operator">*</span> rvi
+	<span class="token keyword">return</span> rank
+</pre>
+</li>
+<li>
 <p>2.基于物品：评测物品之间的相似性，给用户推荐和他之前喜欢物品<code>相似的物品</code></p>
 <ul>
 <li>构建<strong>物品</strong>相似度矩阵w</li>
-<li>相似度计算：<span class="mathjax-exps">$W_{ij} = &#x5C;frac{|N(i)&#x5C;cap N(j)|}{|N(i)|}$</span> or <span class="mathjax-exps">$W_{ij} = &#x5C;frac{|N(i)&#x5C;cap N(j)|}{&#x5C;sqrt{|N(i)||N(j)|}}$</span>
-<ul>
-<li>N(i)表示对物品i有过行为的用户集合</li>
+<li>相似度计算：<span class="mathjax-exps">$W_{ij} = &#x5C;frac{|N(i)&#x5C;cap N(j)|}{|N(i)|}$</span> or <span class="mathjax-exps">$W_{ij} = &#x5C;frac{|N(i)&#x5C;cap N(j)|}{&#x5C;sqrt{|N(i)||N(j)|}}$</span><br>
+- N(i)表示对物品i有过行为的用户集合</li>
+<li>推荐公式：<span class="mathjax-exps">$P(i,j) = &#x5C;sum_{v&#x5C;in S(j.k)&#x5C;cap N(u)}W_{ij}R_{ui}$</span><br>
+- S(j,K)是和物品j最相似的K个物品的集合，N(u)表示用户喜欢的物品的集合，<span class="mathjax-exps">$W_{ij}$</span>是物品i和j的相似度，<span class="mathjax-exps">$R_{ui}$</span>是用户u对物品i的兴趣</li>
 </ul>
 </li>
-<li>推荐公式：<span class="mathjax-exps">$P(i,j) = &#x5C;sum_{v&#x5C;in S(j.k)&#x5C;cap N(u)}W_{ij}R_{ui}$</span>
-<ul>
-<li>S(j,K)是和物品j最相似的K个物品的集合，N(u)表示用户喜欢的物品的集合，<span class="mathjax-exps">$W_{ij}$</span>是物品i和j的相似度，<span class="mathjax-exps">$R_{ui}$</span>是用户u对物品i的兴趣</li>
 </ul>
 </li>
 </ul>
@@ -331,12 +429,12 @@ code.language-yaml {
 
       </div>
       <div class="md-sidebar-toc"><ul>
-<li><a href="#notes-for-recommender-system">Notes for Recommender System</a>
+<li><a href="#notes-for-recommending-system">Notes for Recommending System</a>
 <ul>
-<li><a href="#%E4%B8%80-%E5%AE%9E%E9%AA%8C%E6%96%B9%E6%B3%95">一、实验方法</a></li>
-<li><a href="#%E4%BA%8C-%E6%95%B0%E6%8D%AE%E9%9B%86">二、数据集</a></li>
-<li><a href="#%E4%B8%89-%E8%AF%84%E6%B5%8B%E6%8C%87%E6%A0%87">三、评测指标</a></li>
-<li><a href="#%E5%85%AD-%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0">六、算法实现</a>
+<li><a href="#%E5%AE%9E%E9%AA%8C%E6%96%B9%E6%B3%95">实验方法</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E9%9B%86">数据集</a></li>
+<li><a href="#%E8%AF%84%E6%B5%8B%E6%8C%87%E6%A0%87">评测指标</a></li>
+<li><a href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0">算法实现</a>
 <ul>
 <li><a href="#%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E7%AE%97%E6%B3%95">协同过滤算法</a></li>
 <li><a href="#%E5%9F%BA%E4%BA%8E%E6%A0%87%E7%AD%BE%E7%9A%84%E6%8E%A8%E8%8D%90">基于标签的推荐</a></li>
