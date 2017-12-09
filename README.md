@@ -1,6 +1,6 @@
 
 ## Recommending-system
-DM_movie_rs group<p>
+contents<p>
 - 实验方法：离线数据->在线数据
 - 数据集：[MovieLens](http://www.grouplens.org/node/73)
 - 评测指标：TopN，Coverage，Diversity，Fashion…
