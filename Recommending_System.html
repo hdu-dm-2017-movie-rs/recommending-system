@@ -1,7 +1,7 @@
 <!DOCTYPE html>
   <html>
     <head>
-      <title>Recommender System</title>
+      <title>Recommending_System</title>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       
@@ -297,7 +297,8 @@ code.language-yaml {
 </ul>
 </li>
 </ul>
-<pre class="language-python"><span class="token keyword">def</span> <span class="token function">Coverage</span><span class="token punctuation">(</span>train<span class="token punctuation">,</span> test<span class="token punctuation">,</span> N<span class="token punctuation">)</span><span class="token punctuation">:</span>
+<pre class="language-python"><span class="token comment" spellcheck="true"># 覆盖率</span>
+<span class="token keyword">def</span> <span class="token function">Coverage</span><span class="token punctuation">(</span>train<span class="token punctuation">,</span> test<span class="token punctuation">,</span> N<span class="token punctuation">)</span><span class="token punctuation">:</span>
 	recommend_items <span class="token operator">=</span> set<span class="token punctuation">(</span><span class="token punctuation">)</span>
 	all_items <span class="token operator">=</span> set<span class="token punctuation">(</span><span class="token punctuation">)</span>
 	<span class="token keyword">for</span> user <span class="token keyword">in</span> train<span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
@@ -308,7 +309,8 @@ code.language-yaml {
 			recommend_items<span class="token punctuation">.</span>add<span class="token punctuation">(</span>item<span class="token punctuation">)</span>
 	<span class="token keyword">return</span> len<span class="token punctuation">(</span>recommend_items<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token punctuation">(</span>len<span class="token punctuation">(</span>all_items<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">1.0</span><span class="token punctuation">)</span>
 </pre>
-<pre class="language-python"><span class="token keyword">def</span> <span class="token function">GiniIndex</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">:</span>
+<pre class="language-python"><span class="token comment" spellcheck="true"># 基尼系数</span>
+<span class="token keyword">def</span> <span class="token function">GiniIndex</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">:</span>
 		j <span class="token operator">=</span> <span class="token number">1</span>
 		n <span class="token operator">=</span> len<span class="token punctuation">(</span>p<span class="token punctuation">)</span>
 		G <span class="token operator">=</span> <span class="token number">0</span>
@@ -321,6 +323,7 @@ code.language-yaml {
 </li>
 <li>3.多样性：使推荐列表能覆盖用户的多个兴趣点
 <ul>
+<li>可以按照电影的类别对推荐结果中的电影分类，然后每种类别都选出几部电影组成最终的推荐结果</li>
 <li>设<span class="mathjax-exps">$s(i,j)&#x5C;in [0,1]$</span>为物品i和j之间的相似度<br>
 <span class="mathjax-exps">$Diversity = 1-&#x5C;frac{&#x5C;sum s(i,j)}{0.5*|R(u)|(|R(u)|-1)}$</span><br>
 <span class="mathjax-exps">$Diversity = &#x5C;frac1{|U|&#x5C;sum_U Diversity(R(u))}$</span> (整体多样性)</li>
@@ -334,6 +337,7 @@ code.language-yaml {
 <ul>
 <li>1.<a href="http://blog.csdn.net/gamer_gyt/article/details/51346159">用户 &amp; Item 协同过滤算法</a></li>
 <li>2.<a href="http://blog.csdn.net/gamer_gyt/article/details/51684716">基于标签的推荐系统</a></li>
+<li>3.<a href="http://blog.csdn.net/acdreamers/article/details/44672305">协同过滤算法</a></li>
 </ul>
 <h4 class="mume-header" id="%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E7%AE%97%E6%B3%95">协同过滤算法</h4>
 
@@ -342,7 +346,7 @@ code.language-yaml {
 <li>假设有用户u和v，物品i和j，采用Jaccard公式或cos相似度的计算
 <ul>
 <li>
-<p>1.基于用户：评测用户之间的相似性，给用户推荐和他兴趣相投的<code>其他用户</code>喜欢的物品</p>
+<p>1.基于用户(UserCF)：评测用户之间的相似性，给用户推荐和他兴趣相投的<code>其他用户</code>喜欢的物品</p>
 <ul>
 <li>构建<strong>用户</strong>相似度矩阵w</li>
 <li><strong>相似度计算</strong>：<span class="mathjax-exps">$W_{uv} = &#x5C;frac{|N(u)&#x5C;cap N(v)|}{&#x5C;sqrt{|N(u)||N(v)|}}$</span>
@@ -350,10 +354,12 @@ code.language-yaml {
 <li>N(u)表示用户喜欢的物品的集合</li>
 </ul>
 </li>
-<li><strong>相似度计算改进</strong>：首先计算出<span class="mathjax-exps">$|N(u)&#x5C;cap N(v)|&#x5C;neq 0$</span>的用户对<span class="mathjax-exps">$(u,v)$</span>进行初步筛选,之后用余弦相似度计算</li>
+<li><strong>相似度计算改进1</strong>：首先计算出<span class="mathjax-exps">$|N(u)&#x5C;cap N(v)|&#x5C;neq 0$</span>的用户对<span class="mathjax-exps">$(u,v)$</span>进行初步筛选,之后用余弦相似度计算</li>
+<li><strong>相似度计算改进2</strong>：增加量惩罚机制，惩罚用户u和用户v共同兴趣列表中热门物品对他们相似度的影响<span class="mathjax-exps">$W_{uv} = &#x5C;frac{|N(u)&#x5C;cap N(v)|&#x5C;frac1{log1+N(i)}}{&#x5C;sqrt{|N(u)||N(v)|}}$</span></li>
 <li><strong>推荐公式</strong>：<span class="mathjax-exps">$P(u,i) = &#x5C;sum_{v&#x5C;in S(u.k)&#x5C;cap N(i)}W_{uv}R_{vi}$</span>
 <ul>
 <li>S(u,k)表示和用户u兴趣最接近的K个用户，N(i)表示对物品i有过行为的用户集合，<span class="mathjax-exps">$W_uv$</span>表示用户u和用户v的兴趣相似度，<span class="mathjax-exps">$R_vi$</span>表示用户v对物品i的评分)</li>
+<li>选取不同k进行评测，得出最佳推荐数量的物品</li>
 </ul>
 </li>
 </ul>
@@ -389,6 +395,7 @@ code.language-yaml {
 				<span class="token keyword">if</span> u <span class="token operator">==</span> v<span class="token punctuation">:</span>
 					<span class="token keyword">continue</span>
 				C<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">+=</span> <span class="token number">1</span>
+				<span class="token comment" spellcheck="true"># C[u][v] += 1/math.log(1+len(users))</span>
 	
 	<span class="token comment" spellcheck="true">#calculate finial similarity matrix W</span>
 	W <span class="token operator">=</span> dict<span class="token punctuation">(</span><span class="token punctuation">)</span>
@@ -396,8 +403,8 @@ code.language-yaml {
 		<span class="token keyword">for</span> v<span class="token punctuation">,</span> cuv <span class="token keyword">in</span> related_users<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
 			W<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">=</span> cuv <span class="token operator">/</span> math<span class="token punctuation">.</span>sqrt<span class="token punctuation">(</span>N<span class="token punctuation">[</span>u<span class="token punctuation">]</span> <span class="token operator">*</span> N<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">)</span>
 	<span class="token keyword">return</span> W
-</pre>
-<pre class="language-python"><span class="token comment" spellcheck="true"># 推荐</span>
+
+<span class="token comment" spellcheck="true"># 推荐</span>
 <span class="token keyword">def</span> <span class="token function">Recommend</span><span class="token punctuation">(</span>user<span class="token punctuation">,</span> train<span class="token punctuation">,</span> W<span class="token punctuation">)</span><span class="token punctuation">:</span>
 	rank <span class="token operator">=</span> dict<span class="token punctuation">(</span><span class="token punctuation">)</span>
 	interacted_items <span class="token operator">=</span> train<span class="token punctuation">[</span>user<span class="token punctuation">]</span>
@@ -412,20 +419,86 @@ code.language-yaml {
 </pre>
 </li>
 <li>
-<p>2.基于物品：评测物品之间的相似性，给用户推荐和他之前喜欢物品<code>相似的物品</code></p>
+<p>2.基于物品(ItemCF)：评测物品之间的相似性，给用户推荐和他之前喜欢物品<code>相似的物品</code></p>
 <ul>
 <li>构建<strong>物品</strong>相似度矩阵w</li>
-<li>相似度计算：<span class="mathjax-exps">$W_{ij} = &#x5C;frac{|N(i)&#x5C;cap N(j)|}{|N(i)|}$</span> or <span class="mathjax-exps">$W_{ij} = &#x5C;frac{|N(i)&#x5C;cap N(j)|}{&#x5C;sqrt{|N(i)||N(j)|}}$</span><br>
-- N(i)表示对物品i有过行为的用户集合</li>
-<li>推荐公式：<span class="mathjax-exps">$P(i,j) = &#x5C;sum_{v&#x5C;in S(j.k)&#x5C;cap N(u)}W_{ij}R_{ui}$</span><br>
-- S(j,K)是和物品j最相似的K个物品的集合，N(u)表示用户喜欢的物品的集合，<span class="mathjax-exps">$W_{ij}$</span>是物品i和j的相似度，<span class="mathjax-exps">$R_{ui}$</span>是用户u对物品i的兴趣</li>
+<li><strong>相似度计算1</strong>：<span class="mathjax-exps">$W_{ij} = &#x5C;frac{|N(i)&#x5C;cap N(j)|}{|N(i)|}$</span>
+<ul>
+<li>N(i)表示对物品i有过行为的用户集合，可以理解为喜欢物品i的用户中有多少比例的用户也喜欢物品j</li>
 </ul>
+</li>
+<li><strong>相似度计算2</strong><span class="mathjax-exps">$W_{ij} = &#x5C;frac{|N(i)&#x5C;cap N(j)|}{&#x5C;sqrt{|N(i)||N(j)|}}$</span>
+<ul>
+<li>如果物品j很热门，很多人都喜欢，那么<span class="mathjax-exps">$W_ij$</span>就会很大,需要避免一直推荐出太热门的物品</li>
+</ul>
+</li>
+<li><strong>相似度计算改进</strong>：软性惩罚机制 <span class="mathjax-exps">$W_{ij} = &#x5C;frac{|N(i)&#x5C;cap N(j)|&#x5C;frac1{log1+|N(u)|}}{&#x5C;sqrt{|N(i)||N(j)|}}$</span><br>
+<span class="mathjax-exps">$W_{ij} = &#x5C;frac{|N(i)&#x5C;cap N(j)|}{|N(i)|^{1-a}|N(j)|^a} a&#x5C;in[0.5,1]$</span></li>
+<li>推荐公式：<span class="mathjax-exps">$P(i,j) = &#x5C;sum_{v&#x5C;in S(j.k)&#x5C;cap N(u)}W_{ij}R_{ui}$</span>
+<ul>
+<li>S(j,K)是和物品j最相似的K个物品的集合，N(u)表示用户喜欢的物品的集合，<span class="mathjax-exps">$W_{ji}$</span>是物品j对i的相似度，<span class="mathjax-exps">$R_{ui}$</span>是用户u对物品i的兴趣</li>
+</ul>
+</li>
+<li><strong>归一化</strong>：用于提升准确度，覆盖率和多样性 <span class="mathjax-exps">$W_ij` = &#x5C;frac{W_ij}{max_j W_ij}$</span></li>
+</ul>
+<pre class="language-python"><span class="token comment" spellcheck="true"># 相似度计算</span>
+<span class="token keyword">def</span> <span class="token function">ItemSimilarity</span><span class="token punctuation">(</span>train<span class="token punctuation">)</span><span class="token punctuation">:</span>
+	<span class="token comment" spellcheck="true">#calculate co-rated users between items</span>
+	C <span class="token operator">=</span> dict<span class="token punctuation">(</span><span class="token punctuation">)</span>
+	N <span class="token operator">=</span> dict<span class="token punctuation">(</span><span class="token punctuation">)</span>
+	<span class="token keyword">for</span> u<span class="token punctuation">,</span> items <span class="token keyword">in</span> train<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+		<span class="token keyword">for</span> i <span class="token keyword">in</span> users<span class="token punctuation">:</span>
+			N<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">+=</span> <span class="token number">1</span>
+			<span class="token keyword">for</span> j <span class="token keyword">in</span> users<span class="token punctuation">:</span>
+				<span class="token keyword">if</span> i <span class="token operator">==</span> j<span class="token punctuation">:</span>
+					<span class="token keyword">continue</span>
+				C<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">+=</span> <span class="token number">1</span>
+				<span class="token comment" spellcheck="true"># C[i][j] += 1 / math.log(1+len(items)*1.0)</span>
+	
+	<span class="token comment" spellcheck="true">#calculate finial similarity matrix W</span>
+	W <span class="token operator">=</span> dict<span class="token punctuation">(</span><span class="token punctuation">)</span>
+	<span class="token keyword">for</span> i<span class="token punctuation">,</span>related_items <span class="token keyword">in</span> C<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+		<span class="token keyword">for</span> j<span class="token punctuation">,</span> cij <span class="token keyword">in</span> related_items<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+			W<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">=</span> cij <span class="token operator">/</span> math<span class="token punctuation">.</span>sqrt<span class="token punctuation">(</span>N<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">*</span> N<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span>
+	<span class="token keyword">return</span> W
+
+<span class="token comment" spellcheck="true"># 推荐公式</span>
+<span class="token keyword">def</span> <span class="token function">Recommendation</span><span class="token punctuation">(</span>train<span class="token punctuation">,</span> user_id<span class="token punctuation">,</span> W<span class="token punctuation">,</span> K<span class="token punctuation">)</span><span class="token punctuation">:</span>
+	rank <span class="token operator">=</span> dict<span class="token punctuation">(</span><span class="token punctuation">)</span>
+	ru <span class="token operator">=</span> train<span class="token punctuation">[</span>user_id<span class="token punctuation">]</span>
+	<span class="token keyword">for</span> i<span class="token punctuation">,</span>pi <span class="token keyword">in</span> ru<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+		<span class="token keyword">for</span> j<span class="token punctuation">,</span> wj <span class="token keyword">in</span> sorted<span class="token punctuation">(</span>W<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>key<span class="token operator">=</span>itemgetter<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> reverse<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span>K<span class="token punctuation">]</span><span class="token punctuation">:</span>
+		<span class="token keyword">if</span> j <span class="token keyword">in</span> ru<span class="token punctuation">:</span>
+			<span class="token keyword">continue</span>
+		rank<span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">+=</span> pi <span class="token operator">*</span> wj
+	<span class="token keyword">return</span> rank
+</pre>
+</li>
+<li>
+<p>UserCF vs ItemCF<br>
+<img src="https://raw.githubusercontent.com/hdu-dm-2017-movie-rs/recommending-system/master/CF%20compare.jpg" alt="CF compare"></p>
 </li>
 </ul>
 </li>
 </ul>
 <h4 class="mume-header" id="%E5%9F%BA%E4%BA%8E%E6%A0%87%E7%AD%BE%E7%9A%84%E6%8E%A8%E8%8D%90">基于标签的推荐</h4>
 
+<h4 class="mume-header" id="%E9%9A%90%E5%90%AB%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90lfm">隐含语义分析(LFM)</h4>
+
+<ul>
+<li>
+<ul>
+<li>other: LSA,LDA,LCM,LTM,matrix factorization</li>
+</ul>
+</li>
+</ul>
+<h4 class="mume-header" id="%E7%B3%BB%E7%BB%9F%E5%86%B7%E5%90%AF%E5%8A%A8%E9%97%AE%E9%A2%98">系统冷启动问题</h4>
+
+<h4 class="mume-header" id="%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84">推荐系统架构</h4>
+
+<ul>
+<li>(<a href="http://www.mymediaproject.org/default.aspx">http://www.mymediaproject.org/default.aspx</a>)</li>
+</ul>
 
       </div>
       <div class="md-sidebar-toc"><ul>
@@ -438,6 +511,9 @@ code.language-yaml {
 <ul>
 <li><a href="#%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E7%AE%97%E6%B3%95">协同过滤算法</a></li>
 <li><a href="#%E5%9F%BA%E4%BA%8E%E6%A0%87%E7%AD%BE%E7%9A%84%E6%8E%A8%E8%8D%90">基于标签的推荐</a></li>
+<li><a href="#%E9%9A%90%E5%90%AB%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90lfm">隐含语义分析(LFM)</a></li>
+<li><a href="#%E7%B3%BB%E7%BB%9F%E5%86%B7%E5%90%AF%E5%8A%A8%E9%97%AE%E9%A2%98">系统冷启动问题</a></li>
+<li><a href="#%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84">推荐系统架构</a></li>
 </ul>
 </li>
 </ul>
