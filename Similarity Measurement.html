@@ -1,7 +1,7 @@
 <!DOCTYPE html>
   <html>
     <head>
-      <title>Recommender System</title>
+      <title>Similarity Measurement</title>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       
@@ -216,134 +216,86 @@ code.language-yaml {
     </head>
     <body for="html-export">
       <div class="mume markdown-preview   ">
-      <h2 class="mume-header" id="notes-for-recommender-system">Notes for Recommender System</h2>
+      <h2 class="mume-header" id="%E4%BC%B0%E7%AE%97%E4%B8%8D%E5%90%8C%E6%A0%B7%E6%9C%AC%E4%B9%8B%E9%97%B4%E7%9A%84%E7%9B%B8%E4%BC%BC%E6%80%A7%E5%BA%A6%E9%87%8Fsimilarity-measurement">估算不同样本之间的相似性度量(Similarity Measurement)</h2>
 
-<h3 class="mume-header" id="%E4%B8%80-%E5%AE%9E%E9%AA%8C%E6%96%B9%E6%B3%95">一、实验方法</h3>
-
-<p>1.离线实验：用于测试大量的算法并选取合适的<br>
-2.在线实验：上线测试<br>
-3.用户调查：</p>
-<h3 class="mume-header" id="%E4%BA%8C-%E6%95%B0%E6%8D%AE%E9%9B%86">二、数据集</h3>
-
-<p>1.MovieLens<br>
-2.豆瓣</p>
-<h3 class="mume-header" id="%E4%B8%89-%E8%AF%84%E6%B5%8B%E6%8C%87%E6%A0%87">三、评测指标</h3>
-
-<p>1.TopN推荐预测度量：准确率(precision)&amp;召回率(recall)，然后画出准确率/召回率曲线</p>
-<ul>
-<li>设<span class="mathjax-exps">$R(u)$</span>为训练集的推荐列表，<span class="mathjax-exps">$T(u)$</span>为测试集上的列表<br>
-<span class="mathjax-exps">$Recall = &#x5C;frac{&#x5C;sum|R(u)&#x5C;cap T(u)|}{&#x5C;sum|T(u)|}$</span><br>
-<span class="mathjax-exps">$Precision = &#x5C;frac{&#x5C;sum|R(u)&#x5C;cap T(u)|}{&#x5C;sum|R(u)|}$</span></li>
-</ul>
-<pre class="language-python"><span class="token keyword">def</span> <span class="token function">PrecisionRecall</span><span class="token punctuation">(</span>test<span class="token punctuation">,</span> N<span class="token punctuation">)</span><span class="token punctuation">:</span>
-    hit <span class="token operator">=</span> <span class="token number">0</span>
-    n_recall <span class="token operator">=</span> <span class="token number">0</span>
-    n_precision <span class="token operator">=</span> <span class="token number">0</span>
-    <span class="token keyword">for</span> user<span class="token punctuation">,</span> items <span class="token keyword">in</span> test<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-        rank <span class="token operator">=</span> Recommend<span class="token punctuation">(</span>user<span class="token punctuation">,</span> N<span class="token punctuation">)</span>
-        hit <span class="token operator">+=</span> len<span class="token punctuation">(</span>rank <span class="token operator">&amp;</span> items<span class="token punctuation">)</span>
-        n_recall <span class="token operator">+=</span> len<span class="token punctuation">(</span>items<span class="token punctuation">)</span>
-        n_precision <span class="token operator">+=</span> N
-<span class="token keyword">return</span> <span class="token punctuation">[</span>hit <span class="token operator">/</span> <span class="token punctuation">(</span><span class="token number">1.0</span> <span class="token operator">*</span> n_recall<span class="token punctuation">)</span><span class="token punctuation">,</span> hit <span class="token operator">/</span> <span class="token punctuation">(</span><span class="token number">1.0</span> <span class="token operator">*</span> n_precision<span class="token punctuation">)</span><span class="token punctuation">]</span>
-</pre>
-<p>2.覆盖率：推荐系统能够推荐出来的物品占总物品集合的比例，是描述一个推荐系统对物品长尾的发掘能力</p>
-<ul>
-<li>
-<p>好的推荐系统需要有比较高的用户满意度，也可以考虑较高的覆盖率</p>
-</li>
-<li>
-<p>2.1 简单覆盖率：设用户集合为U，<span class="mathjax-exps">$R(u)$</span>为训练集的推荐列表，I为总物品的集合<br>
-<span class="mathjax-exps">$Coverage = &#x5C;frac{U_{R(u)}}{I}$</span></p>
-</li>
-<li>
-<p>2.2 信息熵和基尼系数：通过研究物品在推荐列表中出现次数的分布描述推荐系统挖掘长尾的能力</p>
-<ul>
-<li>设p()计算物品流行程度，i和j为物品量<br>
-<span class="mathjax-exps">$Entropy = -&#x5C;sum_{i=1}^nP(i)logP(i)$</span><br>
-<span class="mathjax-exps">$Gini = &#x5C;frac1{n-1}&#x5C;sum_{j=1}^n(2j-n-1)P(j)$</span> (通行算法)</li>
-</ul>
-</li>
-</ul>
-<pre class="language-python"><span class="token keyword">def</span> <span class="token function">GiniIndex</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">:</span>
-    j <span class="token operator">=</span> <span class="token number">1</span>
-    n <span class="token operator">=</span> len<span class="token punctuation">(</span>p<span class="token punctuation">)</span>
-    G <span class="token operator">=</span> <span class="token number">0</span>
-    <span class="token keyword">for</span> item<span class="token punctuation">,</span> weight <span class="token keyword">in</span> sorted<span class="token punctuation">(</span>p<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> key<span class="token operator">=</span>itemgetter<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-        G <span class="token operator">+=</span> <span class="token punctuation">(</span><span class="token number">2</span> <span class="token operator">*</span> j <span class="token operator">-</span> n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">*</span> weight
-<span class="token keyword">return</span> G <span class="token operator">/</span> float<span class="token punctuation">(</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span>
-</pre>
-<ul>
-<li>2.3 社会学马太效应：系统会增大热门物品和非热门物品的流行度差距，而推荐系统的初衷是希望消除马太效应，使得各种物品能被展示给对它们感兴趣的某一类人群
-<ul>
-<li>用Gini系数衡量马太效应，减少推荐算法中基尼系数和实际基尼系数两者之间的差距</li>
-</ul>
-</li>
-</ul>
-<p>3.多样性：使推荐列表能覆盖用户的多个兴趣点</p>
-<ul>
-<li>设<span class="mathjax-exps">$s(i,j)&#x5C;in [0,1]$</span>为物品i和j之间的相似度<br>
-<span class="mathjax-exps">$Diversity = 1-&#x5C;frac{&#x5C;sum s(i,j)}{0.5*|R(u)|(|R(u)|-1)}$</span><br>
-<span class="mathjax-exps">$Diversity = &#x5C;frac1{|U|&#x5C;sum_U Diversity(R(u))}$</span> (整体多样性)</li>
-</ul>
-<p>4.实时性</p>
-<h3 class="mume-header" id="%E5%85%AD-%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0">六、算法实现</h3>
-
-<ol>
-<li><a href="http://blog.csdn.net/gamer_gyt/article/details/51346159">用户 &amp; Item 协同过滤算法</a></li>
-<li><a href="http://blog.csdn.net/gamer_gyt/article/details/51684716">基于标签的推荐系统</a></li>
-</ol>
-<h4 class="mume-header" id="%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E7%AE%97%E6%B3%95">协同过滤算法</h4>
+<h4 class="mume-header" id="1-euclidean-distance%E6%AC%A7%E6%B0%8F%E8%B7%9D%E7%A6%BB">1. Euclidean Distance(欧氏距离)</h4>
 
 <ul>
-<li>得到<code>用户-物品</code>，<code>物品-评分</code>格式的数据</li>
-<li>假设有用户u和v，物品i和j，采用皮尔逊相关性的计算</li>
+<li><span class="mathjax-exps">$d_{12} = &#x5C;sqrt{(x_1-x_2)^2+(y_1-y_2)^2}$</span></li>
 </ul>
-<p>1.基于用户：评测用户之间的相似性，给用户推荐和他兴趣相投的<code>其他用户</code>喜欢的物品</p>
-<ul>
-<li>构建<strong>用户</strong>相似度矩阵w</li>
-<li>相似度计算：<span class="mathjax-exps">$W_{uv} = &#x5C;frac{|N(u)&#x5C;cap N(v)|}{&#x5C;sqrt{|N(u)||N(v)|}}$</span>
-<ul>
-<li>N(u)表示用户喜欢的物品的集合</li>
-</ul>
-</li>
-<li>推荐公式：<span class="mathjax-exps">$P(u,i) = &#x5C;sum_{v&#x5C;in S(u.k)&#x5C;cap N(i)}W_{uv}R_{vi}$</span>
-<ul>
-<li>S(u,k)表示和用户u兴趣最接近的K个用户，N(i)表示对物品i有过行为的用户集合，<span class="mathjax-exps">$W_uv$</span>表示用户u和用户v的兴趣相似度，<span class="mathjax-exps">$R_vi$</span>表示用户v对物品i的评分)</li>
-</ul>
-</li>
-</ul>
-<p>2.基于物品：评测物品之间的相似性，给用户推荐和他之前喜欢物品<code>相似的物品</code></p>
-<ul>
-<li>构建<strong>物品</strong>相似度矩阵w</li>
-<li>相似度计算：<span class="mathjax-exps">$W_{ij} = &#x5C;frac{|N(i)&#x5C;cap N(j)|}{|N(i)|}$</span> or <span class="mathjax-exps">$W_{ij} = &#x5C;frac{|N(i)&#x5C;cap N(j)|}{&#x5C;sqrt{|N(i)||N(j)|}}$</span>
-<ul>
-<li>N(i)表示对物品i有过行为的用户集合</li>
-</ul>
-</li>
-<li>推荐公式：<span class="mathjax-exps">$P(i,j) = &#x5C;sum_{v&#x5C;in S(j.k)&#x5C;cap N(u)}W_{ij}R_{ui}$</span>
-<ul>
-<li>S(j,K)是和物品j最相似的K个物品的集合，N(u)表示用户喜欢的物品的集合，<span class="mathjax-exps">$W_{ij}$</span>是物品i和j的相似度，<span class="mathjax-exps">$R_{ui}$</span>是用户u对物品i的兴趣</li>
-</ul>
-</li>
-</ul>
-<h4 class="mume-header" id="%E5%9F%BA%E4%BA%8E%E6%A0%87%E7%AD%BE%E7%9A%84%E6%8E%A8%E8%8D%90">基于标签的推荐</h4>
+<h4 class="mume-header" id="2-manhattancity-block-distance%E6%9B%BC%E5%93%88%E9%A1%BF%E8%B7%9D%E7%A6%BB">2. Manhattan/City Block Distance(曼哈顿距离)</h4>
 
+<ul>
+<li><span class="mathjax-exps">$d_{12} = |x_1-x_2|+|y_1-y_2|$</span></li>
+</ul>
+<h4 class="mume-header" id="3-chebyshev-distance%E5%88%87%E6%AF%94%E9%9B%AA%E5%A4%AB%E8%B7%9D%E7%A6%BB">3. Chebyshev Distance(切比雪夫距离)</h4>
+
+<ul>
+<li><span class="mathjax-exps">$d_{12} = max(|x_1-x_2|,|y_1-y_2|)$</span></li>
+</ul>
+<h4 class="mume-header" id="4-minkowski-distance%E9%97%B5%E5%8F%AF%E5%A4%AB%E6%96%AF%E5%9F%BA%E8%B7%9D%E7%A6%BB">4. Minkowski Distance(闵可夫斯基距离)</h4>
+
+<ul>
+<li><span class="mathjax-exps">$d_{12} = &#x5C;sqrt[p]{&#x5C;sum^n_{k=1}|x_{1k}-x_{2k}|^p}$</span></li>
+<li>p=1,Manhattan;p=2,Euclidean;p=<span class="mathjax-exps">$&#x5C;infty$</span>,Chebyshev;</li>
+</ul>
+<h4 class="mume-header" id="5-standardized-euclidean-distance%E6%A0%87%E5%87%86%E5%8C%96%E6%AC%A7%E6%B0%8F%E8%B7%9D%E7%A6%BB">5. Standardized Euclidean distance(标准化欧氏距离)</h4>
+
+<ul>
+<li><span class="mathjax-exps">$d_{12} = &#x5C;sqrt{&#x5C;sum^n_{k=1}(&#x5C;frac{x_{1k}-x_{2k}}{S_k})^2}$</span></li>
+</ul>
+<h4 class="mume-header" id="6-mahalanobis-distance%E9%A9%AC%E6%B0%8F%E8%B7%9D%E7%A6%BB">6. Mahalanobis Distance(马氏距离)</h4>
+
+<ul>
+<li><span class="mathjax-exps">$d(x) = &#x5C;sqrt{(x-&#x5C;mu)^TS^{-1}(x-&#x5C;mu)}$</span></li>
+<li><span class="mathjax-exps">$d(x_i,x_j) = &#x5C;sqrt{(x_i-x_j)^TS^{-1}(x_i-x{_j})}$</span></li>
+<li>S为协方差矩阵，<span class="mathjax-exps">$&#x5C;mu$</span>为均值</li>
+</ul>
+<h4 class="mume-header" id="7-cosine%E5%A4%B9%E8%A7%92%E4%BD%99%E5%BC%A6">7. Cosine(夹角余弦)</h4>
+
+<ul>
+<li><span class="mathjax-exps">$cos&#x5C;theta = &#x5C;frac{x_1x_2+y_1y_2}{&#x5C;sqrt{x_1^2+y_1^2}&#x5C;sqrt{x_2^2+y_2^2}}$</span></li>
+<li>余弦取值范围为[-1,1]</li>
+</ul>
+<h4 class="mume-header" id="8-hamming-distance%E6%B1%89%E6%98%8E%E8%B7%9D%E7%A6%BB">8. Hamming distance(汉明距离)</h4>
+
+<ul>
+<li>两个等长字符串s1与s2之间的汉明距离定义为将其中一个变为另外一个所需要作的最小替换次数</li>
+</ul>
+<h4 class="mume-header" id="9-jaccard-similarity-coefficient%E6%9D%B0%E5%8D%A1%E5%BE%B7%E8%B7%9D%E7%A6%BB-%E6%9D%B0%E5%8D%A1%E5%BE%B7%E7%9B%B8%E4%BC%BC%E7%B3%BB%E6%95%B0">9. Jaccard similarity coefficient(杰卡德距离 &amp; 杰卡德相似系数)</h4>
+
+<ul>
+<li><span class="mathjax-exps">$J(A,B) = &#x5C;frac{|A &#x5C;cap B|}{|A &#x5C;cup B|}$</span></li>
+<li><span class="mathjax-exps">$J_{&#x5C;sigma}(A,B) = 1-J(A,B)$</span></li>
+<li>杰卡德距离用两个集合中不同元素占所有元素的比例来衡量两个集合的区分度,用在衡量样本的相似度上</li>
+</ul>
+<h4 class="mume-header" id="10-pelson-correlation-coefficient%E7%9A%AE%E5%B0%94%E9%80%8A%E7%9B%B8%E5%85%B3%E7%B3%BB%E6%95%B0-%E7%9B%B8%E5%85%B3%E8%B7%9D%E7%A6%BB">10. Pelson Correlation coefficient(皮尔逊相关系数 &amp; 相关距离)</h4>
+
+<ul>
+<li><span class="mathjax-exps">$&#x5C;rho_{xy}= &#x5C;frac{Cov(x,y)}{&#x5C;sqrt{D(x)}&#x5C;sqrt{D(y)}}$</span></li>
+<li><span class="mathjax-exps">$Cov(x,y) = E((x-Ex)(y-Ey))$</span></li>
+<li><span class="mathjax-exps">$D_{xy} = 1-&#x5C;rho_{xy}$</span></li>
+</ul>
+<h4 class="mume-header" id="11-information-entropy%E4%BF%A1%E6%81%AF%E7%86%B5">11. Information Entropy信息熵</h4>
+
+<ul>
+<li><span class="mathjax-exps">$Entropy(x) =&#x5C;sum^n_{i=1}-P_ilog_2P_i$</span></li>
+</ul>
 
       </div>
       <div class="md-sidebar-toc"><ul>
-<li><a href="#notes-for-recommender-system">Notes for Recommender System</a>
-<ul>
-<li><a href="#%E4%B8%80-%E5%AE%9E%E9%AA%8C%E6%96%B9%E6%B3%95">一、实验方法</a></li>
-<li><a href="#%E4%BA%8C-%E6%95%B0%E6%8D%AE%E9%9B%86">二、数据集</a></li>
-<li><a href="#%E4%B8%89-%E8%AF%84%E6%B5%8B%E6%8C%87%E6%A0%87">三、评测指标</a></li>
-<li><a href="#%E5%85%AD-%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0">六、算法实现</a>
-<ul>
-<li><a href="#%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E7%AE%97%E6%B3%95">协同过滤算法</a></li>
-<li><a href="#%E5%9F%BA%E4%BA%8E%E6%A0%87%E7%AD%BE%E7%9A%84%E6%8E%A8%E8%8D%90">基于标签的推荐</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li><a href="#%E4%BC%B0%E7%AE%97%E4%B8%8D%E5%90%8C%E6%A0%B7%E6%9C%AC%E4%B9%8B%E9%97%B4%E7%9A%84%E7%9B%B8%E4%BC%BC%E6%80%A7%E5%BA%A6%E9%87%8Fsimilarity-measurement">估算不同样本之间的相似性度量(Similarity Measurement)</a><br>
+* <a href="#1-euclidean-distance%E6%AC%A7%E6%B0%8F%E8%B7%9D%E7%A6%BB">1. Euclidean Distance(欧氏距离)</a><br>
+* <a href="#2-manhattancity-block-distance%E6%9B%BC%E5%93%88%E9%A1%BF%E8%B7%9D%E7%A6%BB">2. Manhattan/City Block Distance(曼哈顿距离)</a><br>
+* <a href="#3-chebyshev-distance%E5%88%87%E6%AF%94%E9%9B%AA%E5%A4%AB%E8%B7%9D%E7%A6%BB">3. Chebyshev Distance(切比雪夫距离)</a><br>
+* <a href="#4-minkowski-distance%E9%97%B5%E5%8F%AF%E5%A4%AB%E6%96%AF%E5%9F%BA%E8%B7%9D%E7%A6%BB">4. Minkowski Distance(闵可夫斯基距离)</a><br>
+* <a href="#5-standardized-euclidean-distance%E6%A0%87%E5%87%86%E5%8C%96%E6%AC%A7%E6%B0%8F%E8%B7%9D%E7%A6%BB">5. Standardized Euclidean distance(标准化欧氏距离)</a><br>
+* <a href="#6-mahalanobis-distance%E9%A9%AC%E6%B0%8F%E8%B7%9D%E7%A6%BB">6. Mahalanobis Distance(马氏距离)</a><br>
+* <a href="#7-cosine%E5%A4%B9%E8%A7%92%E4%BD%99%E5%BC%A6">7. Cosine(夹角余弦)</a><br>
+* <a href="#8-hamming-distance%E6%B1%89%E6%98%8E%E8%B7%9D%E7%A6%BB">8. Hamming distance(汉明距离)</a><br>
+* <a href="#9-jaccard-similarity-coefficient%E6%9D%B0%E5%8D%A1%E5%BE%B7%E8%B7%9D%E7%A6%BB-%E6%9D%B0%E5%8D%A1%E5%BE%B7%E7%9B%B8%E4%BC%BC%E7%B3%BB%E6%95%B0">9. Jaccard similarity coefficient(杰卡德距离 &amp; 杰卡德相似系数)</a><br>
+* <a href="#10-pelson-correlation-coefficient%E7%9A%AE%E5%B0%94%E9%80%8A%E7%9B%B8%E5%85%B3%E7%B3%BB%E6%95%B0-%E7%9B%B8%E5%85%B3%E8%B7%9D%E7%A6%BB">10. Pelson Correlation coefficient(皮尔逊相关系数 &amp; 相关距离)</a><br>
+* <a href="#11-information-entropy%E4%BF%A1%E6%81%AF%E7%86%B5">11. Information Entropy信息熵</a></li>
 </ul>
 </div>
       <a id="sidebar-toc-btn">≡</a>
