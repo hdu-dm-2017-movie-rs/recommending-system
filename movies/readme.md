@@ -72,26 +72,30 @@ movieId,title,genres
 
 `Genres` 是用竖线分割的列表，均是以下值:
 
-- Action
-- Adventure
-- Animation
-- Children's
-- Comedy
-- Crime
-- Documentary
-- Drama
-- Fantasy
-- Film-Noir
-- Horror
-- Musical
-- Mystery
-- Romance
-- Sci-Fi
-- Thriller
-- War
-- Western
+- Action 动作
+- Adventure 冒险
+- Animation 动画
+- Children's 儿童
+- Comedy 喜剧
+- Crime 犯罪
+- Documentary 纪录片
+- Drama 戏剧 
+- Fantasy 魔幻
+- Film-Noir 黑色幽默
+- Horror 恐怖
+- Musical 音乐
+- Mystery 悬疑
+- Romance 浪漫
+- Sci-Fi 科幻
+- Thriller 惊悚片
+- War 战争
+- Western 西方
 - (no genres listed)
 
+豆瓣没有的类型
+- Drama 戏剧 
+- Thriller 惊悚片
+- Western 西方
 
 ## links.csv
 
