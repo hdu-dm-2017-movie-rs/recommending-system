@@ -16,11 +16,12 @@ contents<p>
 - kevin: 由于github中的markdown不支持Latex公式支持，可查看.html阅读上传的文本
 - 17.12.06 kevin：增加 recommending-system notes
 - 17.12.09 kevin：完善协同过滤算法公式
+- 17.12.20 kevin：update usercf & itemcf code
 
 ## Calender
 |Sun.|Mon.|Tue.|Wed.|Thur.|Fri.|Sat.|
 |---|---|---|---|---|---|---|
-|||||7|8|**#9**|
+|||||7|8|9|
 |10|11|12|13|14|15|16|
-|17|18|19|20|21|22|23|
-|24|25|26|||||
+|17|18|19|**20**|21|22|23|
+|24|25|26|27|28|||
